@@ -17,6 +17,7 @@ class Scraper
 	end
 
 	# returns array of blogs
+	# NEED TO FIX THE 19 TO BE RESPONSIVE TO PPL W/OUT BLOGS
 	def get_blogs
 		blogs = []
 		19.times do |i|
