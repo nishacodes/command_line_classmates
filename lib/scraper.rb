@@ -29,8 +29,9 @@ class Scraper
 	def get_twitter
 		mixed_array = html.search("li:first-child a").text.split(" ")
 		twitter = mixed_array.select { |name| name[0] == "@"}
+		twitter
 	end
-	twitter
+	
 end
 
 my_scraper = Scraper.new("http://flatironschool-bk.herokuapp.com/")
