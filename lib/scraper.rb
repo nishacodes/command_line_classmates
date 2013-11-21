@@ -10,27 +10,30 @@ class Scraper
 	end
 	
 	# html is a method here that returns @html (bc its in attr_reader)
-	# .text gets the text inside of the tags
+	# returns array of student names
 	def get_student_names	
-		students = html.search("div.face.front h3").text 
+		students = html.search("div.face.front h3").text.split(/(?<=[a-z.])(?=[A-Z])/) # ?<= is look behind and ?= is look ahead. it splits in between these
+		students
 	end
 
-	# inside the href attribute
-	def get_student_blogs
-		blog_url = []
+	# returns array of blogs
+	def get_blogs
+		blogs = []
 		19.times do |i|
-			blog_url << html.search("a.blog[href]")[i]["href"]
+			blogs << html.search("a.blog")[i]["href"]
 		end
-		blog_url
+		blogs
 	end
 
-	# only need to get the twitter name since twitter urls have the same pattern
-	def get_twitter_urls
+	# returns array of twitter handles
+	def get_twitter
 		mixed_array = html.search("li:first-child a").text.split(" ")
-		twitter_array = mixed_array.select { |name| name[0] == "@"}
+		twitter = mixed_array.select { |name| name[0] == "@"}
 	end
+	twitter
 end
 
 my_scraper = Scraper.new("http://flatironschool-bk.herokuapp.com/")
-puts @html
-puts my_scraper.get_student_blogs
+puts my_scraper.get_student_names
+puts my_scraper.get_blogs
+puts my_scraper.get_twitter
