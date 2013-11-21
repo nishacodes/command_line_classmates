@@ -1,5 +1,5 @@
 class Student
-	attr_reader :name, :twitter, :blog
+	attr_accessor :name, :twitter, :blog
 
 	def initialize(name="",twitter="",blog="")
 		@name = name
