@@ -32,10 +32,10 @@ class Scraper
 	# returns array of twitter names
 	def get_twitter
     twitter = html.search(".back").map do |back_div|
-      if back_div.search(".twitter").text.nil?
-        "none"
-      else
+      if back_div.search(".twitter").text.strip[0]=="@"
         back_div.search(".twitter").text.strip
+      else
+        "none"
       end
     end
 	end
