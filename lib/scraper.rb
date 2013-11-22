@@ -20,9 +20,9 @@ class Scraper
 	# NEED TO FIX THE 19 TO BE RESPONSIVE TO PPL W/OUT BLOGS
 	def get_blogs
 		blogs = []
-    html.search("ul.social").each do |social_div|
-      if social_div.search("a.blog").text == "Blog"
-        blogs << social_div.search("a.blog")[0]["href"]
+    html.search(".back").each do |back_div|
+      if back_div.search(".social .blog").text == "Blog"
+        blogs << back_div.search(".social .blog")[0]["href"]
       else
         blogs << "none"
       end
@@ -30,23 +30,18 @@ class Scraper
     blogs
 	end
 
-	# returns array of twitter handles
 	def get_twitter
-		mixed_array = html.search("li:first-child a").text.split(" ")
-    twitter = []
-    mixed_array.map do |name| 
-      if name[0] == "@"
-        twitter << name
+		twitter = []
+    html.search(".back").each do |back_div|
+      if back_div.search(".social .twitter").text[0] == "@"
+        twitter << back_div.search(".social .twitter").text
       else
         twitter << "none"
       end
     end
     twitter
 	end
+
+
 	
 end
-
-my_scraper = Scraper.new("http://flatironschool-bk.herokuapp.com/")
-# puts my_scraper.get_student_names
-p my_scraper.get_blogs
-# puts my_scraper.get_twitter
