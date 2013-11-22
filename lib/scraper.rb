@@ -16,32 +16,28 @@ class Scraper
 		students
 	end
 
-	# returns array of blogs
-	# NEED TO FIX THE 19 TO BE RESPONSIVE TO PPL W/OUT BLOGS
+	# returns array of blog urls
 	def get_blogs
-		blogs = []
-    html.search(".back").each do |back_div|
+    blogs = html.search(".back").map do |back_div|
       if back_div.search(".social .blog").text == "Blog"
-        blogs << back_div.search(".social .blog")[0]["href"]
+        back_div.search(".social .blog")[0]["href"]
       else
-        blogs << "none"
+        "none"
       end
     end
-    blogs
+    
 	end
 
+	# returns array of twitter names
 	def get_twitter
-		twitter = []
-    html.search(".back").each do |back_div|
-      if back_div.search(".social .twitter").text[0] == "@"
-        twitter << back_div.search(".social .twitter").text
+    html.search(".back").map do |back_div|
+      if back_div.search(".twitter").text.nil?
+        "none"
       else
-        twitter << "none"
+        back_div.search(".twitter").text.strip
       end
     end
-    twitter
+    
 	end
 
-
-	
 end
