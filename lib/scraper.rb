@@ -19,8 +19,8 @@ class Scraper
 	# returns array of blog urls
 	def get_blogs
     blogs = html.search(".back").map do |back_div|
-      if back_div.search(".social .blog").text == "Blog"
-        back_div.search(".social .blog")[0]["href"]
+      if back_div.search(".blog").text == "Blog"
+        back_div.search(".blog")[0]["href"]
       else
         "none"
       end
