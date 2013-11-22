@@ -9,11 +9,13 @@ class Scraper
 		@html = Nokogiri::HTML(download)  # class::class_method(parameter)
 	end
 	
-	# html is a method here that returns @html (bc its in attr_reader)
 	# returns array of student names
 	def get_student_names	
-		students = html.search("div.face.front h3").text.split(/(?<=[a-z.])(?=[A-Z])/) # ?<= is look behind and ?= is look ahead. it splits in between these
-		students
+		students = html.search("h3").collect do |h3|
+			h3.text
+		end
+		# ALTERNATE METHOD USING REGEX: ?<= is look behind and ?= is look ahead. it splits in between these
+		# students = html.search("h3").text.split(/(?<=[a-z.])(?=[A-Z])/) 
 	end
 
 	# returns array of blog urls
@@ -25,19 +27,17 @@ class Scraper
         "none"
       end
     end
-    
 	end
 
 	# returns array of twitter names
 	def get_twitter
-    html.search(".back").map do |back_div|
+    twitter = html.search(".back").map do |back_div|
       if back_div.search(".twitter").text.nil?
         "none"
       else
         back_div.search(".twitter").text.strip
       end
     end
-    
 	end
 
 end

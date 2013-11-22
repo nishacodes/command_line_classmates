@@ -22,5 +22,6 @@ students.each do |student|
 	puts student.name
 	puts student.twitter
 	puts student.blog
+	puts "***********"
 end
 
