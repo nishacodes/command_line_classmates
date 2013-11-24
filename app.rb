@@ -58,8 +58,7 @@ class GetStudent
 		if @request.start_with?('any')
 			launchRandom
 		elsif @request == "all"
-			puts "printinfo"
-			# printInfo
+			printInfo
 		elsif @request.end_with?('-b') || @request.end_with?('-t')
 			puts "byname"
 			# launchByName
@@ -84,21 +83,19 @@ class GetStudent
 		case
 			when @request == "any -b"
 				Launchy.open("#{@blogs.sample}")
-			when @request == "any -t"
+			when @request == "any -t"	
 				Launchy.open("#{@twitters.sample}")
 			end
 	end
 	
 	def printInfo
-		if @request == "all" 
-			@students.each do |student|
-				puts student.name
-				puts student.twitter
-				puts student.blog
-				puts "***********"
-			end
+		puts "*" * 60
+		@students.each do |student|
+			puts student.name
+			puts "Twitter: #{student.twitter}"
+			puts "Blog: #{student.blog}"
+			puts "*" * 60
 		end
-
 	end
 
 
