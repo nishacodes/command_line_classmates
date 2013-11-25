@@ -4,7 +4,6 @@ require 'launchy'
 
 
 class Directory
-
 	attr_accessor :names, :twitters, :blogs, :students, :request, :student, :index
 
 	def initialize
@@ -67,7 +66,6 @@ class Directory
 			printInfo
 		elsif @request.end_with?('-b') || @request.end_with?('-t')
 			findStudent
-			launchByName
 		elsif @request == "end"
 			exit
 		else
@@ -87,20 +85,27 @@ class Directory
 				@index = index
 			end
 		end
+
+		if @index.nil? 
+			puts "Sorry, that student does not exist."
+			askInfo
+		else
+			launchByName
+		end
 	end
 
 	def launchByName
 		case 
 			when @request == "-b"
-				if @blogs[@index] == "none"
-					puts "Student does not have a blog" 
+				if @blogs[@index] == "none" 
+					puts "Student does not have a blog." 
 				else
 					link = @blogs[@index]
 					Launchy.open("#{link}")
 				end
 			when @request =="-t"
 				if @twitters[@index] == "none"
-					puts "Student does not have a Twitter account" 
+					puts "Student does not have a Twitter account. " 
 				else
 					link = @twitters[@index]
 					Launchy.open("#{link}")
