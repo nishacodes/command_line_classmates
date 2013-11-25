@@ -3,9 +3,9 @@ require './lib/student.rb' # requires all files in lib directory
 require 'launchy'
 
 
-class GetStudent
+class Directory
 
-	attr_accessor :names, :twitters, :blogs, :students, :request
+	attr_accessor :names, :twitters, :blogs, :students, :request, :student, :index
 
 	def initialize
 		scraper = Scraper.new("http://flatironschool-bk.herokuapp.com/")
@@ -14,6 +14,8 @@ class GetStudent
 		@blogs = scraper.get_blogs
 		@students = []
 		@request
+		@student
+		@index
 	end
 
 	def run
@@ -21,7 +23,6 @@ class GetStudent
 		formatLinks
 		showOptions
 		askInfo
-		processRequest
 	end
 
 	def storeInfo
@@ -31,8 +32,11 @@ class GetStudent
 	end
 
 	def formatLinks
-		@twitters.delete("none")
 		@twitters.each {|handle| handle.gsub!("@","http://www.twitter.com/") }
+	end
+
+	def removeNone
+		@twitters.delete("none")
 		@blogs.delete("none")
 	end
 
@@ -46,12 +50,14 @@ class GetStudent
 		puts "'any -b'      to launch a random student's blog"
 		puts "'any -t'      to launch a random student's twitter"
 		puts "'all'         to view all student info"
+		puts "'end'         to exit the program"
 		puts "-" * 60
 	end
 	
 	def askInfo
-		puts "Please enter your choice."
+		puts "What would you like to see?"
 		@request = gets.chomp
+		processRequest
 	end
 
 	def processRequest
@@ -60,8 +66,10 @@ class GetStudent
 		elsif @request == "all"
 			printInfo
 		elsif @request.end_with?('-b') || @request.end_with?('-t')
-			puts "byname"
-			# launchByName
+			findStudent
+			launchByName
+		elsif @request == "end"
+			exit
 		else
 			puts "Sorry that is not a valid option. Try again."
 			@request = gets.chomp
@@ -69,23 +77,47 @@ class GetStudent
 		end
 	end
 
+	def findStudent
+		request_array = @request.downcase.split(" ")
+		first_name = request_array[0]
+		@request = request_array.last
+
+		@names.each_with_index do |name, index|
+			if name.downcase.split(" ")[0] == first_name
+				@index = index
+			end
+		end
+	end
+
 	def launchByName
-		puts "hi"
-		# case
-		# 	when @request == "any -t"
-				
-		# 	when @request == "any -b"
-				
-		# 	end
+		case 
+			when @request == "-b"
+				if @blogs[@index] == "none"
+					puts "Student does not have a blog" 
+				else
+					link = @blogs[@index]
+					Launchy.open("#{link}")
+				end
+			when @request =="-t"
+				if @twitters[@index] == "none"
+					puts "Student does not have a Twitter account" 
+				else
+					link = @twitters[@index]
+					Launchy.open("#{link}")
+				end
+			end
+		askInfo	
 	end
 
 	def launchRandom
+		removeNone
 		case
 			when @request == "any -b"
 				Launchy.open("#{@blogs.sample}")
 			when @request == "any -t"	
 				Launchy.open("#{@twitters.sample}")
 			end
+		askInfo
 	end
 	
 	def printInfo
@@ -96,17 +128,18 @@ class GetStudent
 			puts "Blog: #{student.blog}"
 			puts "*" * 60
 		end
+		askInfo
 	end
 
-
+	def exit
+		puts "Have a nice day."
+	end
 
 end
 
 
-
-
-app = GetStudent.new
-app.run
+directory = Directory.new
+directory.run
 
 
 
